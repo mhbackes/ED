@@ -1,0 +1,13 @@
+i amendoim
+i chocolate
+i joao
+i joaquim
+i luisa
+i marcos
+i miguel
+i rapaz
+i ze
+e 1 5
+e 1 0
+e 2 5
+e 2 0
