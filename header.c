@@ -16,6 +16,7 @@ void input(Tusuario **ptusuario)
 							fscanf(arq, "%s", nome1);
 							printf("nome1=%s\n\n", nome1);
 							*ptusuario=Insere_Usuario(*ptusuario,nome1);
+							imprime_arvore(*ptusuario);
 							break;
 					case 'e': printf("Exibe\n");
 							fscanf(arq, "%d%d", &ord, &top);
@@ -122,7 +123,7 @@ Tusuario* Splay(Tusuario* t, char nome[])
 		}
 		else if (!strcmp(nome,t->esq->nome)){
 				printf("Usuario ja cadastrado\n");
-				retorno=t;
+				retorno=RotDir(t);
 		}
 		else{
 			if (strcmp(nome,t->esq->nome)<0){ 
@@ -144,7 +145,7 @@ Tusuario* Splay(Tusuario* t, char nome[])
 		}
 		else if (!strcmp(nome,t->dir->nome)){
 				printf("Usuario ja cadastrado\n");
-				retorno=t;
+				retorno=RotEsq(t);
 		}
 		else{
 			if (strcmp(nome,t->dir->nome)>0){
@@ -287,4 +288,31 @@ int x;
    if (t->dir != NULL) Desenha(t->dir, (nivel+1), 2);
  }
  else printf("Arvore Vazia");
-};
+}
+ void central_esquerda (Tusuario *a, char array[][80], int *i, int nivel)
+{
+	if(a!=NULL){
+		central_esquerda(a->esq,array,i,nivel+1);
+		array[nivel][*i]=a->nome[0];
+		array[nivel][*i+1]=a->nome[1];
+		*i=*i+2;
+		central_esquerda(a->dir,array,i,nivel+1);
+	}
+}
+
+void imprime_arvore (Tusuario *a)
+{
+	char array[24][80]={0};
+	int i=0,j;
+	central_esquerda (a,array,&i,0);
+	for(i=0;i<24;i++){
+		for(j=0;j<80;j++){
+			if(array[i][j]!=0)
+				printf("%c", array[i][j]);
+			else
+				printf(" ");
+		}
+		if(j%2)
+			printf(" ");
+	}
+}

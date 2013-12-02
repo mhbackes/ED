@@ -1,8 +1,10 @@
 
+
 typedef struct feed Tfeed;
 typedef struct usuario Tusuario;
 typedef struct amigo_inimigo Tamigo_inimigo;
 
+void imprime_arvore (Tusuario *a);
 struct feed{
 	char texto[1000];
 	Tfeed *prox;
@@ -21,7 +23,6 @@ struct amigo_inimigo{
 	Tamigo_inimigo *esq, *dir;
 };
 
-//
 void input(Tusuario **ptusuario);
 Tusuario* Insere_Usuario(Tusuario *t, char nome[]);
 Tusuario* Splay(Tusuario* t, char nome[]);
@@ -34,3 +35,5 @@ void Exibe_Todos_Usuarios_Decresc(Tusuario *t);
 Tusuario* Consulta_Usuario(Tusuario* t, char nome[]);
 
 void Desenha(Tusuario* t, int nivel, int num);
+
+
