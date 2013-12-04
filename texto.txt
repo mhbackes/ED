@@ -7,7 +7,18 @@ i marcos
 i miguel
 i rapaz
 i ze
-e 1 5
-e 1 0
-e 2 5
-e 2 0
+i amendoim
+m amendoim 1 0
+a claudio amendoim 1
+a amendoim marcos 1
+a amendoim chocolate 1
+a amendoim joao 1
+a amendoim miguel 1
+a amendoim marcos 1
+a amendoim ze 1
+a amendoim rapaz 1
+a antonio claudio 2
+a marcos rapaz 2
+m claudio 1 1
+m marcos 2 0
+m amendoim 1 0
