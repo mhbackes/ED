@@ -28,7 +28,7 @@ Folders=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000001000000
+CompilerSettings=
 UnitCount=3
 
 [VersionInfo]
@@ -50,10 +50,20 @@ ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=1
 
-[Unit2]
-FileName=header.h
+[Unit1]
+FileName=main.c
 CompileCpp=0
-Folder=
+Folder=Trabalho ED
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit2]
+FileName=header.c
+CompileCpp=0
+Folder=Trabalho ED
 Compile=1
 Link=1
 Priority=1000
@@ -61,19 +71,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=header.c
+FileName=header.h
 CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit1]
-FileName=main.c
-CompileCpp=0
-Folder=
+Folder=Trabalho ED
 Compile=1
 Link=1
 Priority=1000

@@ -1,0 +1,51 @@
+e ERRO nenhum usuario cadastrado
+e ERRO nenhum usuario cadastrado
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+i ERRO: Usuario ja cadastrado
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+i usuario inserido com sucesso
+e abbie bart bill flanders hommer lisa maggie margie
+e margie maggie lisa hommer flanders bill bart abbie
+e abbie bart bill flanders hommer
+m ERRO nenhum amigo cadastrado
+m ERRO usuario nao cadastrado
+a ERRO usuario nao cadastrado
+a ERRO usuario nao cadastrado
+a ERRO usuario nao cadastrado
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a inimigo inserido com sucesso
+a inimigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a inimigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a inimigo inserido com sucesso
+a inimigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a inimigo inserido com sucesso
+a inimigo inserido com sucesso
+a amigo inserido com sucesso
+a amigo inserido com sucesso
+a inimigo inserido com sucesso
+a inimigo inserido com sucesso
+m bart lisa maggie margie
+m bill flanders
+m bart lisa
+m bart hommer lisa
+m abbie
+m abbie
+m bart maggie
+m hommer margie
+m hommer margie
