@@ -145,13 +145,18 @@ int main(int argc, char *argv[])
 	                    	Cria_Ranking_amigo(&ptranking,ptusuario);
 	                    else
 	                    	Cria_Ranking_inimigo(&ptranking,ptusuario);
-	                    fprintf(saida,"r");
-	                    if(top==0)
-	                    	Imprime_Todos_Ranking(ptranking,saida);
-	                    else
-	                    	Imprime_Ranking(ptranking,&top,saida);
-	                    fprintf(saida,"\n");
-	                    ptranking=Exclui_Ranking(ptranking);
+	                    if(ptranking!=NULL)
+	                    {
+		                    fprintf(saida,"r");
+		                    if(top==0)
+		                    	Imprime_Todos_Ranking(ptranking,saida);
+		                    else
+		                    	Imprime_Ranking(ptranking,&top,saida);
+		                    fprintf(saida,"\n");
+		                    ptranking=Exclui_Ranking(ptranking);
+		                }
+		                else
+		                	fprintf(saida,"r ERRO nenhum usuario popular\n");
 	                }
                 }
                 getc(entrada);

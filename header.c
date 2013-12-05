@@ -409,7 +409,8 @@ void Cria_Ranking_amigo_inimigo (Tranking_popular **ptranking, Tusuario *ptusuar
 	if(ptusuario!=NULL)
 	{
 		Cria_Ranking_amigo_inimigo(ptranking,ptusuario->dir);
-		*ptranking=Insere_Ranking_amigo_inimigo(*ptranking,ptusuario);
+		if(((ptusuario->numamigos)+(ptusuario->numinimigos))!=0)
+			*ptranking=Insere_Ranking_amigo_inimigo(*ptranking,ptusuario);
 		Cria_Ranking_amigo_inimigo(ptranking,ptusuario->esq);
 	}
 }
@@ -437,7 +438,8 @@ void Cria_Ranking_amigo (Tranking_popular **ptranking, Tusuario *ptusuario)
 	if(ptusuario!=NULL)
 	{
 		Cria_Ranking_amigo(ptranking,ptusuario->dir);
-		*ptranking=Insere_Ranking_amigo(*ptranking,ptusuario);
+		if(ptusuario->numamigos!=0)
+			*ptranking=Insere_Ranking_amigo(*ptranking,ptusuario);
 		Cria_Ranking_amigo(ptranking,ptusuario->esq);
 	}
 }
@@ -465,7 +467,8 @@ void Cria_Ranking_inimigo (Tranking_popular **ptranking, Tusuario *ptusuario)
 	if(ptusuario!=NULL)
 	{
 		Cria_Ranking_inimigo(ptranking,ptusuario->dir);
-		*ptranking=Insere_Ranking_inimigo(*ptranking,ptusuario);
+		if(ptusuario->numinimigos!=0)
+			*ptranking=Insere_Ranking_inimigo(*ptranking,ptusuario);
 		Cria_Ranking_inimigo(ptranking,ptusuario->esq);
 	}
 }
@@ -502,13 +505,13 @@ void Imprime_Ranking (Tranking_popular *ptranking, int *top, FILE *saida)
 {
 	if(ptranking!=NULL)
     {
-        Exibe_Usuarios_Cresc(ptranking->esq,top,saida);
+        Imprime_Ranking(ptranking->dir,top,saida);
         if(*top!=0)
         {
             fprintf(saida, " %s", ptranking->nome);
             *top=*top-1;
         }
-        Exibe_Usuarios_Cresc(ptranking->dir,top,saida);
+        Imprime_Ranking(ptranking->esq,top,saida);
     }
 }
 
@@ -519,6 +522,7 @@ Tranking_popular* Exclui_Ranking (Tranking_popular *ptranking)
 		ptranking->esq=Exclui_Ranking(ptranking->esq);
 		ptranking->dir=Exclui_Ranking(ptranking->dir);
 		free(ptranking);
+		ptranking=NULL;
 	}
-	return NULL;
+	return ptranking;
 }
