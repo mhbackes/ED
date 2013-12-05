@@ -260,112 +260,32 @@ void imprime_arvore (Tusuario *a)
     }
 }
 
-Tamigo_inimigo* InsereABP(Tusuario* amigo, Tamigo_inimigo* a, char nome[])
+Tamigo_inimigo* InsereAmigoInimigo(Tamigo_inimigo* ptamigos, Tusuario* amigo, FILE *saida)
 {
-    if (a == NULL)
+	int comp;
+	Tamigo_inimigo *retorno=ptamigos;
+    if (ptamigos == NULL)
     {
-        a = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
-        a->info = amigo;
-        a->esq = NULL;
-        a->dir = NULL;
+        retorno = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
+        retorno->info = amigo;
+        retorno->esq = NULL;
+        retorno->dir = NULL;
+        fprintf(saida,"a amigo inserido com sucesso\n");
     }
     else
     {
-        if (strcmp(a->info->nome, nome) > 0)
+    	comp=strcmp(ptamigos->info->nome, amigo->nome);
+    	if(comp==0)
+    	{
+    		fprintf(saida,"a ERRO amigo ja inserido\n");
+    	}
+        else if(comp>0)
         {
-            a->esq = InsereABP(amigo, a->esq, nome);
+            ptamigos->esq = InsereAmigoInimigo(ptamigos->esq, amigo, saida);
         }
-        else
+        else 
         {
-            a->dir = InsereABP(amigo, a->dir, nome);
-        }
-    }
-    return a;
-}
-
-Tamigo_inimigo* InsereAmigoInimigo(Tusuario* t, Tusuario* amigo, int tipo, FILE *saida)
-{
-    Tamigo_inimigo* retorno=NULL;
-    if(tipo == 1)
-    {
-        if(consultaAmigo(t->ptamigos, amigo->nome) != NULL)
-        {
-            fprintf(saida, "a ERRO amigo ja inserido\n");
-            retorno = t->ptamigos;
-        }
-        else
-        {
-            retorno = InsereABP(amigo, t->ptamigos, amigo->nome);
-            fprintf(saida,"a amigo inserido com sucesso\n");
-        }
-    }
-    else
-    {
-        if(consultaInimigo(t->ptinimigos, amigo->nome) != NULL)
-        {
-            fprintf(saida,"a ERRO inimigo ja inserido\n");
-            retorno = t->ptinimigos;
-        }
-        else
-        {
-            retorno = InsereABP(amigo, t->ptinimigos, amigo->nome);
-            fprintf(saida,"a inimigo inserido com sucesso\n");
-        }
-    }
-    return retorno;
-}
-
-Tusuario* consultaAmigo(Tamigo_inimigo* pt, char nome[])
-{
-    Tusuario* retorno;
-    if (pt == NULL)
-    {
-        retorno = NULL;
-    }
-    else
-    {
-        if (!strcmp(pt->info->nome, nome))
-        {
-            retorno = pt->info;
-        }
-        else
-        {
-            if (strcmp(pt->info->nome, nome) > 0)
-            {
-                retorno = consultaAmigo(pt->esq, nome);
-            }
-            else
-            {
-                retorno = consultaAmigo(pt->dir, nome);
-            }
-        }
-    }
-    return retorno;
-}
-
-Tusuario* consultaInimigo(Tamigo_inimigo* pt, char nome[])
-{
-    Tusuario* retorno;
-    if (pt == NULL)
-    {
-        retorno = NULL;
-    }
-    else
-    {
-        if (strcmp(pt->info->nome, nome) == 0)
-        {
-            retorno = pt->info;
-        }
-        else
-        {
-            if (strcmp(pt->info->nome, nome) > 0)
-            {
-                retorno = consultaInimigo(pt->esq, nome);
-            }
-            else
-            {
-                retorno = consultaInimigo(pt->dir, nome);
-            }
+            ptamigos->dir = InsereAmigoInimigo(ptamigos->dir, amigo, saida);
         }
     }
     return retorno;

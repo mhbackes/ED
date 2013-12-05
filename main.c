@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-	Tusuario *ptusuario=NULL, *a;
+	Tusuario *ptusuario=NULL, *amigo;
 	FILE *entrada, *saida;
     Tamigo_inimigo* ret_ins_amigo = NULL;
     
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     
     if(entrada=fopen(nome_arq,"r"))
     {
-    	printf("Arquivo aberto com sucesso");
+    	printf("Arquivo aberto com sucesso\n");
     	saida=fopen("saida.txt","w");
         while(!feof(entrada))
         {
@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
                     fscanf(entrada, "%s", nome1);
                     printf("nome1=%s\n\n", nome1);
                     ptusuario=Insere_Usuario(ptusuario,nome1, saida);
-                    printf("\n\n");
                     break;
                 case 'e':
                     printf("Exibe\n");
@@ -65,19 +64,18 @@ int main(int argc, char *argv[])
                     {
                         if(!(strcmp(nome2,(ptusuario)->nome)))
                         {
-                            a=ptusuario;
+                            amigo=ptusuario;
                             if(ptusuario=Consulta_Usuario(ptusuario,nome1))
                             {
                                 if(!(strcmp(nome1,(ptusuario)->nome)))
                                 {
-                                    ret_ins_amigo = InsereAmigoInimigo(ptusuario, a, tipo,saida);
                                     if(tipo == 1)
                                     {
-                                        ptusuario->ptamigos = ret_ins_amigo;
+                                        ptusuario->ptamigos=InsereAmigoInimigo(ptusuario->ptamigos, amigo, saida);
                                     }
-                                    if(tipo == 2)
+                                    else
                                     {
-                                        ptusuario->ptinimigos = ret_ins_amigo;
+                                        ptusuario->ptinimigos=InsereAmigoInimigo(ptusuario->ptinimigos, amigo, saida);
                                     }
                                 }
                                 else
