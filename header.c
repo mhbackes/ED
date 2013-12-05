@@ -12,6 +12,8 @@ Tusuario* Novo(char nome[], Tusuario* esq, Tusuario* dir)
     novo->ptinimigos=NULL;
     novo->esq=esq;
     novo->dir=dir;
+    novo->numamigos=0;
+    novo->numinimigos=0;
     strcpy(novo->nome,nome);
     return novo;
 };
@@ -260,7 +262,7 @@ void imprime_arvore (Tusuario *a)
     }
 }
 
-Tamigo_inimigo* InsereAmigoInimigo(Tamigo_inimigo* ptamigos, Tusuario* amigo, FILE *saida)
+Tamigo_inimigo* InsereAmigo(Tamigo_inimigo* ptamigos, Tusuario* amigo, FILE *saida)
 {
 	int comp;
 	Tamigo_inimigo *retorno=ptamigos;
@@ -271,26 +273,57 @@ Tamigo_inimigo* InsereAmigoInimigo(Tamigo_inimigo* ptamigos, Tusuario* amigo, FI
         retorno->esq = NULL;
         retorno->dir = NULL;
         fprintf(saida,"a amigo inserido com sucesso\n");
+        amigo->numamigos+=1;
     }
     else
     {
     	comp=strcmp(ptamigos->info->nome, amigo->nome);
     	if(comp==0)
     	{
-    		fprintf(saida,"a ERRO amigo ja inserido\n");
+    			fprintf(saida,"a ERRO amigo ja inserido\n");
     	}
         else if(comp>0)
         {
-            ptamigos->esq = InsereAmigoInimigo(ptamigos->esq, amigo, saida);
+            ptamigos->esq = InsereAmigo(ptamigos->esq, amigo, saida);
         }
         else 
         {
-            ptamigos->dir = InsereAmigoInimigo(ptamigos->dir, amigo, saida);
+            ptamigos->dir = InsereAmigo(ptamigos->dir, amigo, saida);
         }
     }
     return retorno;
 }
-
+Tamigo_inimigo* InsereInimigo (Tamigo_inimigo* ptinimigos, Tusuario* inimigo, FILE *saida)
+{
+	int comp;
+	Tamigo_inimigo *retorno=ptinimigos;
+    if (ptinimigos == NULL)
+    {
+        retorno = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
+        retorno->info = inimigo;
+        retorno->esq = NULL;
+        retorno->dir = NULL;
+        fprintf(saida,"a rival inserido com sucesso\n");
+        inimigo->numinimigos+=1;
+    }
+    else
+    {
+    	comp=strcmp(ptinimigos->info->nome, inimigo->nome);
+    	if(comp==0)
+    	{
+    			fprintf(saida,"a ERRO rival ja inserido\n");
+    	}
+        else if(comp>0)
+        {
+            ptinimigos->esq = InsereInimigo(ptinimigos->esq, inimigo, saida);
+        }
+        else 
+        {
+            ptinimigos->dir = InsereInimigo(ptinimigos->dir, inimigo, saida);
+        }
+    }
+    return retorno;
+}
 void Exibe_Amigos(Tusuario* t, int tipo, int top, FILE *saida)
 {
 	fprintf(saida,"m");
@@ -369,4 +402,123 @@ void Exibe_Amigos_Cresc(Tamigo_inimigo *t, int *top, FILE *saida)
         }
         Exibe_Amigos_Cresc(t->dir,top, saida);
     }
+}
+
+void Cria_Ranking_amigo_inimigo (Tranking_popular **ptranking, Tusuario *ptusuario)
+{
+	if(ptusuario!=NULL)
+	{
+		Cria_Ranking_amigo_inimigo(ptranking,ptusuario->dir);
+		*ptranking=Insere_Ranking_amigo_inimigo(*ptranking,ptusuario);
+		Cria_Ranking_amigo_inimigo(ptranking,ptusuario->esq);
+	}
+}
+
+Tranking_popular* Insere_Ranking_amigo_inimigo (Tranking_popular *ptranking, Tusuario *ptusuario)
+{
+	Tranking_popular *retorno=ptranking;
+	if(ptranking==NULL)
+	{
+		retorno=malloc(sizeof(Tranking_popular));
+		strcpy(retorno->nome,ptusuario->nome);
+		retorno->num=(ptusuario->numamigos)+(ptusuario->numinimigos);
+		retorno->esq=NULL;
+		retorno->dir=NULL;
+	}
+	else if (ptranking->num>((ptusuario->numamigos)+(ptusuario->numinimigos)))
+		ptranking->esq=Insere_Ranking_amigo_inimigo(ptranking->esq, ptusuario);
+	else
+		ptranking->dir=Insere_Ranking_amigo_inimigo(ptranking->dir, ptusuario);
+	return retorno;
+}
+
+void Cria_Ranking_amigo (Tranking_popular **ptranking, Tusuario *ptusuario)
+{
+	if(ptusuario!=NULL)
+	{
+		Cria_Ranking_amigo(ptranking,ptusuario->dir);
+		*ptranking=Insere_Ranking_amigo(*ptranking,ptusuario);
+		Cria_Ranking_amigo(ptranking,ptusuario->esq);
+	}
+}
+
+Tranking_popular* Insere_Ranking_amigo (Tranking_popular *ptranking, Tusuario *ptusuario)
+{
+	Tranking_popular *retorno=ptranking;
+	if(ptranking==NULL)
+	{
+		retorno=malloc(sizeof(Tranking_popular));
+		strcpy(retorno->nome,ptusuario->nome);
+		retorno->num=ptusuario->numamigos;
+		retorno->esq=NULL;
+		retorno->dir=NULL;
+	}
+	else if (ptranking->num>ptusuario->numamigos)
+		ptranking->esq=Insere_Ranking_amigo (ptranking->esq, ptusuario);
+	else
+		ptranking->dir=Insere_Ranking_amigo (ptranking->dir, ptusuario);
+	return retorno;
+}
+
+void Cria_Ranking_inimigo (Tranking_popular **ptranking, Tusuario *ptusuario)
+{
+	if(ptusuario!=NULL)
+	{
+		Cria_Ranking_inimigo(ptranking,ptusuario->dir);
+		*ptranking=Insere_Ranking_inimigo(*ptranking,ptusuario);
+		Cria_Ranking_inimigo(ptranking,ptusuario->esq);
+	}
+}
+
+Tranking_popular* Insere_Ranking_inimigo (Tranking_popular *ptranking, Tusuario *ptusuario)
+{
+	Tranking_popular *retorno=ptranking;
+	if(ptranking==NULL)
+	{
+		retorno=malloc(sizeof(Tranking_popular));
+		strcpy(retorno->nome,ptusuario->nome);
+		retorno->num=ptusuario->numinimigos;
+		retorno->esq=NULL;
+		retorno->dir=NULL;
+	}
+	else if (ptranking->num>ptusuario->numinimigos)
+		ptranking->esq=Insere_Ranking_inimigo (ptranking->esq, ptusuario);
+	else
+		ptranking->dir=Insere_Ranking_inimigo (ptranking->dir, ptusuario);
+	return retorno;
+}
+
+void Imprime_Todos_Ranking (Tranking_popular *ptranking, FILE *saida)
+{
+	if(ptranking!=NULL)
+	{
+		Imprime_Todos_Ranking(ptranking->dir,saida);
+		fprintf(saida," %s", ptranking->nome);
+		Imprime_Todos_Ranking(ptranking->esq,saida);
+	}
+}
+
+void Imprime_Ranking (Tranking_popular *ptranking, int *top, FILE *saida)
+{
+	if(ptranking!=NULL)
+    {
+        Exibe_Usuarios_Cresc(ptranking->esq,top,saida);
+        if(*top!=0)
+        {
+            fprintf(saida, " %s", ptranking->nome);
+            *top=*top-1;
+        }
+        Exibe_Usuarios_Cresc(ptranking->dir,top,saida);
+    }
+}
+
+Tranking_popular* Exclui_Ranking (Tranking_popular *ptranking)
+{
+	if(ptranking!=NULL)
+	{
+		ptranking->esq=Exclui_Ranking(ptranking->esq);
+		ptranking->dir=Exclui_Ranking(ptranking->dir);
+		free(ptranking);
+	}
+	return NULL;
 }

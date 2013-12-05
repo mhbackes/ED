@@ -4,9 +4,10 @@
 
 int main(int argc, char *argv[])
 {
-	Tusuario *ptusuario=NULL, *amigo;
+	Tusuario *ptusuario=NULL, *amigoinimigo;
 	FILE *entrada, *saida;
     Tamigo_inimigo* ret_ins_amigo = NULL;
+    Tranking_popular *ptranking=NULL;
     
     char opcao, nome1[100], nome2[100], texto[1000], nome_arq[100]={"texto.txt"};
     int ord, top, tipo;
@@ -64,18 +65,19 @@ int main(int argc, char *argv[])
                     {
                         if(!(strcmp(nome2,(ptusuario)->nome)))
                         {
-                            amigo=ptusuario;
+                            amigoinimigo=ptusuario;
                             if(ptusuario=Consulta_Usuario(ptusuario,nome1))
                             {
                                 if(!(strcmp(nome1,(ptusuario)->nome)))
                                 {
                                     if(tipo == 1)
                                     {
-                                        ptusuario->ptamigos=InsereAmigoInimigo(ptusuario->ptamigos, amigo, saida);
+                                        ptusuario->ptamigos=InsereAmigo(ptusuario->ptamigos, amigoinimigo, saida);
+                                        
                                     }
                                     else
                                     {
-                                        ptusuario->ptinimigos=InsereAmigoInimigo(ptusuario->ptinimigos, amigo, saida);
+                                        ptusuario->ptinimigos=InsereInimigo(ptusuario->ptinimigos, amigoinimigo, saida);
                                     }
                                 }
                                 else
@@ -133,7 +135,24 @@ int main(int argc, char *argv[])
                     printf("Ranking Popular\n");
                     fscanf(entrada, "%d%d", &tipo, &top);
                     printf("tipo=%d, top=%d\n\n", tipo, top);
-                    // ranking_popular;
+                    if(ptusuario==NULL)
+                    	fprintf(saida,"r ERRO nenhum usuario cadastrado");
+                    else
+                    {
+					    if(tipo==0)
+							Cria_Ranking_amigo_inimigo(&ptranking,ptusuario);
+	                    else if(tipo==1)
+	                    	Cria_Ranking_amigo(&ptranking,ptusuario);
+	                    else
+	                    	Cria_Ranking_inimigo(&ptranking,ptusuario);
+	                    fprintf(saida,"r");
+	                    if(top==0)
+	                    	Imprime_Todos_Ranking(ptranking,saida);
+	                    else
+	                    	Imprime_Ranking(ptranking,&top,saida);
+	                    fprintf(saida,"\n");
+	                    ptranking=Exclui_Ranking(ptranking);
+	                }
                 }
                 getc(entrada);
                 fflush(saida);
