@@ -5,6 +5,7 @@ typedef struct ranking_popular Tranking_popular;
 
 struct feed{
 	char texto[1000];
+	char nome[100];
 	Tfeed *prox;
 };
 
@@ -20,6 +21,7 @@ struct usuario{
 
 struct amigo_inimigo{
 	Tusuario *info;
+	int FB;
 	Tamigo_inimigo *esq, *dir;
 };
 
@@ -57,3 +59,21 @@ void Imprime_Todos_Ranking (Tranking_popular *ptranking, FILE *saida);
 void Imprime_Ranking (Tranking_popular *ptranking, int *top, FILE *saida);
 void Desenha(Tusuario* t, int nivel, int num);
 void imprime_arvore (Tusuario*a);
+
+Tamigo_inimigo* Insere_amigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida);
+Tamigo_inimigo* Insere_inimigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida);
+Tamigo_inimigo* Caso2 (Tamigo_inimigo *a , int *ok);
+Tamigo_inimigo* Caso1 (Tamigo_inimigo* a , int *ok);
+Tamigo_inimigo* rotacao_dupla_esquerda (Tamigo_inimigo* pt);
+Tamigo_inimigo* rotacao_dupla_direita (Tamigo_inimigo* pt);
+Tamigo_inimigo* rotacao_esquerda(Tamigo_inimigo *pt);
+Tamigo_inimigo* rotacao_direita(Tamigo_inimigo *pt);
+Tamigo_inimigo* Consulta_amigo_inimigo (Tamigo_inimigo *t, char nome[]);
+
+Tfeed* Pushfeed(Tfeed* topo, char post[], char nome[]);
+void Insere_Post_Amigo_Inimigo(Tamigo_inimigo *t, char post[], char nome[]);
+void Insere_Post_Todos(Tusuario* t, char post[], char nome[]);
+void Imprime_feed_todos_amigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida);
+void Imprime_feed_todos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida);
+void Imprime_feed_todos_amigos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida);
+

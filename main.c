@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 	FILE *entrada, *saida;
     Tamigo_inimigo* ret_ins_amigo = NULL;
     Tranking_popular *ptranking=NULL;
-    
+    int ok=0;
     char opcao, nome1[100], nome2[100], texto[1000], nome_arq[100]={"texto.txt"};
-    int ord, top, tipo;
+    int ord, top, tipo, achou=0;
     
     /*printf("Digite o nome do arquivo de entrada:\n");
     gets(nome_arq);*/
@@ -72,12 +72,12 @@ int main(int argc, char *argv[])
                                 {
                                     if(tipo == 1)
                                     {
-                                        ptusuario->ptamigos=InsereAmigo(ptusuario->ptamigos, amigoinimigo, saida);
+                                        ptusuario->ptamigos=Insere_amigo(ptusuario->ptamigos, amigoinimigo, &ok, saida);
                                         
                                     }
                                     else
                                     {
-                                        ptusuario->ptinimigos=InsereInimigo(ptusuario->ptinimigos, amigoinimigo, saida);
+                                        ptusuario->ptinimigos=Insere_inimigo(ptusuario->ptinimigos, amigoinimigo, &ok, saida);
                                     }
                                 }
                                 else
@@ -117,13 +117,82 @@ int main(int argc, char *argv[])
                     fseek(entrada, -3, SEEK_CUR);
                     fscanf(entrada, "%d", &tipo);
                     printf("nome1=%s, texto=%s, tipo=%d\n\n", nome1, texto, tipo);
-                    // post;
+                    if(ptusuario=Consulta_Usuario(ptusuario,nome1))
+                    {
+                        if(!(strcmp(nome1,(ptusuario)->nome)))
+                        {
+                            if(tipo == 0)
+                            {
+                            	Insere_Post_Todos(ptusuario, texto, nome1);
+                            }
+                            else if(tipo == 1)
+                            {
+                                Insere_Post_Amigo_Inimigo(ptusuario->ptamigos, texto, nome1);
+                                ptusuario->ptfeed=Pushfeed(ptusuario->ptfeed, texto, nome1);
+                            }
+                            else
+                            {
+                                Insere_Post_Amigo_Inimigo(ptusuario->ptinimigos, texto, nome1);
+                                ptusuario->ptfeed=Pushfeed(ptusuario->ptfeed, texto, nome1);
+                            }
+                            fprintf(saida, "t post inserido com sucesso\n");
+                        }
+                        else
+                        {
+                            fprintf(saida, "t ERRO usuario nao cadastrado\n");
+                        }
+                    }
                     break;
                 case 'p':
                     printf("Exibe Painel\n");
                     fscanf(entrada, "%s%d%d", nome1, &tipo, &top);
                     printf("nome1=%s, tipo=%d, top=%d\n\n", nome1, tipo, top);
-                    // exibe_painel;
+                    if(ptusuario=Consulta_Usuario(ptusuario,nome1))
+                    {
+                        if(!(strcmp(nome1,(ptusuario)->nome)))
+                        {
+                            if(ptusuario->ptfeed==NULL)
+                            	fprintf(saida, "p ERRO feed vazio\n");
+                            else
+                            {
+                            	fprintf(saida,"p");
+                            	if(tipo==0)
+                            	{
+                            		if(top==0)
+                            			Imprime_feed_todos_amigos_inimigos(ptusuario->ptfeed, ptusuario, &achou, saida);
+                            		else
+										Imprime_feed_amigos_inimigos(ptusuario->ptfeed, ptusuario, top, &achou, saida);
+                            	}
+                            	else if(tipo==1)
+                            	{
+                            		if(top==0)
+                            			Imprime_feed_todos_amigos(ptusuario->ptfeed, ptusuario, &achou, saida);
+                            		else
+										Imprime_feed_amigos(ptusuario->ptfeed, ptusuario, top, &achou, saida);
+                            	}
+                            	else
+                            	{
+                            		if(top==0)
+                            			Imprime_feed_todos_inimigos(ptusuario->ptfeed, ptusuario, &achou, saida);
+                            		else
+										Imprime_feed_inimigos(ptusuario->ptfeed, ptusuario, top, &achou, saida);;
+                            	}
+                            	if(achou==0)
+                            	{
+                            		fprintf(saida, " ERRO feed vazio\n");
+                            	}
+                            	else
+                            	{
+                            		fprintf(saida, "\n");
+                            		achou=0;
+                            	}
+                            }
+                        }
+                        else
+                        {
+                            fprintf(saida, "p ERRO usuario nao cadastrado\n");
+                        }
+                    }
                     break;
                 case 'c':
                     printf("Ranking Popular Circulo\n");

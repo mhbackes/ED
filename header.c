@@ -262,68 +262,6 @@ void imprime_arvore (Tusuario *a)
     }
 }
 
-Tamigo_inimigo* InsereAmigo(Tamigo_inimigo* ptamigos, Tusuario* amigo, FILE *saida)
-{
-	int comp;
-	Tamigo_inimigo *retorno=ptamigos;
-    if (ptamigos == NULL)
-    {
-        retorno = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
-        retorno->info = amigo;
-        retorno->esq = NULL;
-        retorno->dir = NULL;
-        fprintf(saida,"a amigo inserido com sucesso\n");
-        amigo->numamigos+=1;
-    }
-    else
-    {
-    	comp=strcmp(ptamigos->info->nome, amigo->nome);
-    	if(comp==0)
-    	{
-    			fprintf(saida,"a ERRO amigo ja inserido\n");
-    	}
-        else if(comp>0)
-        {
-            ptamigos->esq = InsereAmigo(ptamigos->esq, amigo, saida);
-        }
-        else 
-        {
-            ptamigos->dir = InsereAmigo(ptamigos->dir, amigo, saida);
-        }
-    }
-    return retorno;
-}
-Tamigo_inimigo* InsereInimigo (Tamigo_inimigo* ptinimigos, Tusuario* inimigo, FILE *saida)
-{
-	int comp;
-	Tamigo_inimigo *retorno=ptinimigos;
-    if (ptinimigos == NULL)
-    {
-        retorno = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
-        retorno->info = inimigo;
-        retorno->esq = NULL;
-        retorno->dir = NULL;
-        fprintf(saida,"a rival inserido com sucesso\n");
-        inimigo->numinimigos+=1;
-    }
-    else
-    {
-    	comp=strcmp(ptinimigos->info->nome, inimigo->nome);
-    	if(comp==0)
-    	{
-    			fprintf(saida,"a ERRO rival ja inserido\n");
-    	}
-        else if(comp>0)
-        {
-            ptinimigos->esq = InsereInimigo(ptinimigos->esq, inimigo, saida);
-        }
-        else 
-        {
-            ptinimigos->dir = InsereInimigo(ptinimigos->dir, inimigo, saida);
-        }
-    }
-    return retorno;
-}
 void Exibe_Amigos(Tusuario* t, int tipo, int top, FILE *saida)
 {
 	fprintf(saida,"m");
@@ -525,4 +463,324 @@ Tranking_popular* Exclui_Ranking (Tranking_popular *ptranking)
 		ptranking=NULL;
 	}
 	return ptranking;
+}
+
+Tamigo_inimigo* Consulta_amigo_inimigo (Tamigo_inimigo *t, char nome[])
+{
+	int comp;
+	if(t!=NULL)
+	{
+		comp=strcmp(t->info->nome, nome);
+		if(comp==0)
+			return t;
+		if(comp>0)
+			return Consulta_amigo_inimigo(t->esq,nome);
+		else
+			return Consulta_amigo_inimigo(t->dir,nome);
+	}
+	else
+		return t;
+}
+
+Tamigo_inimigo* rotacao_direita(Tamigo_inimigo *pt){
+   Tamigo_inimigo* ptu;
+   ptu = pt->esq; 
+   pt->esq = ptu->dir; 
+   ptu->dir = pt; 
+   pt->FB = 0;
+   pt = ptu; 
+   return pt;
+}
+
+Tamigo_inimigo* rotacao_esquerda(Tamigo_inimigo *pt){
+   Tamigo_inimigo* ptu;
+   ptu = pt->dir; 
+   pt->dir = ptu->esq; 
+   ptu->esq = pt; 
+   pt->FB = 0;
+   pt = ptu; 
+   return pt;
+} 
+
+Tamigo_inimigo* rotacao_dupla_direita (Tamigo_inimigo* pt){
+   Tamigo_inimigo* ptu, *ptv;
+   ptu = pt->esq; 
+   ptv = ptu->dir; 
+   ptu->dir = ptv->esq; 
+   ptv->esq = ptu; 
+   pt->esq = ptv->dir; 
+   ptv->dir = pt; 
+   if (ptv->FB == 1)   pt->FB = -1;
+      else pt->FB = 0;
+   if (ptv->FB == -1)  ptu->FB = 1;
+      else ptu->FB = 0;
+   pt = ptv; 
+   return pt;
+} 
+
+Tamigo_inimigo* rotacao_dupla_esquerda (Tamigo_inimigo* pt){
+   Tamigo_inimigo *ptu, *ptv;
+   ptu = pt->dir; 
+   ptv = ptu->esq; 
+   ptu->esq = ptv->dir; 
+   ptv->dir = ptu; 
+   pt->dir = ptv->esq; 
+   ptv->esq = pt; 
+   if (ptv->FB == -1) pt->FB = 1;
+     else pt->FB = 0;
+   if (ptv->FB == 1) ptu->FB = -1;
+      else ptu->FB = 0;
+   pt = ptv; 
+   return pt;
+}
+
+
+Tamigo_inimigo* Caso1 (Tamigo_inimigo* a , int *ok)
+{
+   Tamigo_inimigo *ptu; 
+	ptu = a->esq;
+	if (ptu->FB == 1) 
+    {    
+        a = rotacao_direita(a);
+     }
+    else
+    {
+        a = rotacao_dupla_direita(a);
+    }
+	
+    a->FB = 0;
+	*ok = 0;
+	return a;
+}
+
+Tamigo_inimigo* Caso2 (Tamigo_inimigo *a , int *ok)
+{
+    Tamigo_inimigo *ptu; 
+	ptu = a->dir;
+	if (ptu->FB == -1) 
+    {
+       a=rotacao_esquerda(a);
+    }
+    else
+    {
+       a=rotacao_dupla_esquerda(a);
+    }
+	a->FB = 0;
+	*ok = 0;
+	return a;
+}
+
+Tamigo_inimigo* Insere_amigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida)
+{
+	 int comp;
+     if (a == NULL) 
+     {
+     	a = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
+        a->info = x;
+        a->esq = NULL;
+        a->dir = NULL;
+        a->FB = 0; 
+	    *ok = 1;
+	    fprintf(saida,"a amigo inserido com sucesso\n");
+	    x->numamigos+=1;
+     }
+     else
+     {
+	     comp=strcmp(a->info->nome, x->nome);
+	     if (comp==0)
+	     {
+	     	fprintf(saida,"a ERRO amigo ja inserido\n");
+	     	return a;
+	     }
+	     else if (comp>0) 
+	     {
+			a->esq = Insere_amigo(a->esq,x,ok, saida);
+	        if (*ok) 
+	        {
+	   		    switch (a->FB) {
+	        	  case -1:  a->FB = 0; *ok = 0; break;
+				  case  0:  a->FB = 1;  break;
+				  case  1:  a=Caso1(a,ok); break;
+	            }
+	         }
+	     }
+		 else
+	     {
+	  		    a->dir = Insere_amigo(a->dir,x,ok, saida);
+	            if (*ok)
+	            { 
+	              switch (a->FB) {
+	                case  1:  a->FB = 0; *ok = 0; break;
+	                case  0:  a->FB = -1; break;
+				    case -1:  a = Caso2(a,ok); break;
+	             }
+	            }
+	 	}
+ 	}
+     return a;
+}
+
+Tamigo_inimigo* Insere_inimigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida)
+{
+	 int comp;
+     if (a == NULL) 
+     {
+     	a = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
+        a->info = x;
+        a->esq = NULL;
+        a->dir = NULL;
+        a->FB = 0; 
+	    *ok = 1;
+	    fprintf(saida,"a inimigo inserido com sucesso\n");
+	    x->numinimigos+=1;
+     }
+     else
+     {
+	     comp=strcmp(a->info->nome, x->nome);
+	     if (comp==0)
+	     {
+	     	fprintf(saida,"a ERRO inimigo ja inserido\n");
+	     	return a;
+	     }
+	     else if (comp>0) 
+	     {
+			a->esq = Insere_inimigo(a->esq,x,ok, saida);
+	        if (*ok) 
+	        {
+	   		    switch (a->FB) {
+	        	  case -1:  a->FB = 0; *ok = 0; break;
+				  case  0:  a->FB = 1;  break;
+				  case  1:  a=Caso1(a,ok); break;
+	            }
+	         }
+	     }
+		 else
+	     {
+	  		    a->dir = Insere_inimigo(a->dir,x,ok, saida);
+	            if (*ok)
+	            { 
+	              switch (a->FB) {
+	                case  1:  a->FB = 0; *ok = 0; break;
+	                case  0:  a->FB = -1; break;
+				    case -1:  a = Caso2(a,ok); break;
+	             }
+	            }
+	 	}
+ 	}
+     return a;
+}
+
+Tfeed* Pushfeed(Tfeed* topo, char post[], char nome[])
+{
+    Tfeed *novo; //novo elemento
+    novo = (Tfeed*) malloc(sizeof(Tfeed));//aloca um novo nodo
+    novo->prox = NULL; //inicialisa o ponteiro como NULL
+    strcpy(novo->texto, post);//insere a informação no novo nodo
+    strcpy(novo->nome, nome);
+    novo->prox = topo;//encaeia o elemento
+    topo = novo;
+
+    return topo;//retorna o topo da pilha para a função que a chamou
+}
+
+void Insere_Post_Amigo_Inimigo(Tamigo_inimigo *t, char post[], char nome[])
+{
+    if(t!=NULL)
+    {
+        Insere_Post_Amigo_Inimigo(t->esq, post, nome);
+        t->info->ptfeed = Pushfeed(t->info->ptfeed, post,  nome);
+        Insere_Post_Amigo_Inimigo(t->dir, post, nome);
+    }
+}
+
+void Insere_Post_Todos(Tusuario* t, char post[], char nome[])
+{
+    if(t!=NULL)
+    {
+        Insere_Post_Todos(t->esq, post, nome);
+        t->ptfeed = Pushfeed(t->ptfeed, post, nome);
+        Insere_Post_Todos(t->dir, post, nome);
+    }
+}
+
+void Imprime_feed_todos_amigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida)
+{
+	if(topo!=NULL)
+	{
+	    if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptamigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_todos_amigos(topo->prox, t, achou, saida);
+	}
+}
+
+void Imprime_feed_todos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida)
+{
+	if(topo!=NULL)
+	{
+	    if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_todos_inimigos (topo->prox, t, achou, saida);
+	}
+}
+
+void Imprime_feed_todos_amigos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida)
+{
+	if(topo!=NULL)
+	{
+	    if(!strcmp(topo->nome,t->nome) ||
+		(Consulta_amigo_inimigo(t->ptamigos, topo->nome)!=NULL) ||
+		(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_todos_amigos_inimigos(topo->prox, t, achou, saida);
+	}
+}
+
+void Imprime_feed_amigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* saida)
+{
+	if((topo!=NULL)&&(top!=0))
+	{
+	    if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptamigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_amigos(topo->prox, t, top-1, achou, saida);
+	}
+}
+
+void Imprime_feed_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* saida)
+{
+	if((topo!=NULL)&&(top!=0))
+	{
+	    if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_amigos(topo->prox, t, top-1, achou, saida);
+	}
+}
+
+void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* saida)
+{
+	if((topo!=NULL)&&(top!=0))
+	{
+	    if(!strcmp(topo->nome,t->nome) ||
+		(Consulta_amigo_inimigo(t->ptamigos, topo->nome)!=NULL) ||
+		(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL))
+	    {
+	        fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome);
+	        *achou=1;
+	    }
+	    Imprime_feed_amigos_inimigos(topo->prox, t, top-1, achou, saida);
+	}
 }
