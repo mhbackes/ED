@@ -4,19 +4,19 @@ typedef struct amigo_inimigo Tamigo_inimigo;
 typedef struct ranking_popular Tranking_popular;
 
 struct feed{
-	char texto[1000];
-	char nome[100];
-	Tfeed *prox;
+	char texto[1000]; //campo para armazenar o post
+	char nome[100]; //nome do usuario que postou
+	Tfeed *prox; //elo com o proximo post da pilha
 };
 
 struct usuario{
-	char nome[100];
-	Tfeed *ptfeed;
-	int	numamigos;
-	int numinimigos;
-	Tamigo_inimigo *ptamigos;
-	Tamigo_inimigo *ptinimigos;
-	Tusuario *esq, *dir;
+	char nome[100]; //nome do usuario
+	Tfeed *ptfeed; //ponteiro para pilha de post
+	int	numamigos; //contador do número de amigos
+	int numinimigos; //contador do número de rivais
+	Tamigo_inimigo *ptamigos; //ponteiro para a AVL de amigos
+	Tamigo_inimigo *ptinimigos; //ponteiro para a AVL de rivais
+	Tusuario *esq, *dir; //elo com o usuário a direita e a esquerda da árvore Splay
 };
 
 struct amigo_inimigo{
@@ -26,13 +26,13 @@ struct amigo_inimigo{
 };
 
 struct ranking_popular{
-	char nome[100];
-	int num;
-	Tranking_popular *esq;
-	Tranking_popular *dir;
+	char nome[100]; //nome do usuario
+	int num; //número responsável pela 'popularidade'
+	Tranking_popular *esq; //elo com o usuario a esquerda
+	Tranking_popular *dir; //elo com o usuario a direita
 };
 
-void input(Tusuario **ptusuario);
+//todas funções abaixo estão explicadas no header.c
 Tusuario* Insere_Usuario(Tusuario *t, char nome[], FILE *saida);
 Tusuario* Splay(Tusuario* t, char nome[], FILE *saida);
 Tusuario* RotDir(Tusuario* t);
