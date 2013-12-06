@@ -840,7 +840,7 @@ void Imprime_feed_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* 
 {
     if((topo!=NULL)&&(top!=0)) //se a pilha de post não for vazia e o contador de post não for 0, executa a função
     {
-        if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL)) //compara strings para verificar se o usuario que postou está na lista de rivais
+        if((!strcmp(topo->nome,t->nome))||(Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL)) //compara strings para verificar se o usuario que postou está na lista de rivais ou é o proprio usuario
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
@@ -855,7 +855,7 @@ void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou,
     {
         if(!strcmp(topo->nome,t->nome) ||
                 (Consulta_amigo_inimigo(t->ptamigos, topo->nome)!=NULL) ||
-                (Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL)) //compara strings para verificar se o usuario que postou está na lista de amigos ou rivais
+                (Consulta_amigo_inimigo(t->ptinimigos, topo->nome)!=NULL)) //compara strings para verificar se o usuario que postou está na lista de amigos ou rivais ou é o proprio usuario
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
@@ -863,3 +863,70 @@ void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou,
         Imprime_feed_amigos_inimigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
+
+Tranking_circulo* Insere_ranking_circulo (Tranking_circulo *ptlista, char nome[])
+{
+	Tranking_circulo *novo, *aux, *aux2=NULL;
+	if(ptlista==NULL)
+	{
+		ptlista=malloc(sizeof(Tranking_circulo));
+		strcpy(ptlista->nome,nome);
+		ptlista->num=1;
+		ptlista->ant=NULL;
+		ptlista->prox=NULL;
+	}
+	else
+	{
+		aux=ptlista;
+		while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
+		{	
+			aux2=aux;
+			aux=aux->prox;
+		}
+		if(aux==NULL)
+		{
+			novo=malloc(sizeof(Tranking_circulo));
+			strcpy(novo->nome,nome);
+			novo->num=1;
+			novo->ant=aux2;
+			aux2->prox=novo;
+			novo->prox=NULL;
+		}
+		else
+		{
+			aux->num+=1;
+			while((aux->ant!=NULL)&&(aux->ant->num<aux->num))
+			{
+				aux2=aux->ant->ant;
+				aux->ant->prox=aux->prox;
+				if(aux->prox!=NULL)
+					aux->prox->ant=aux->ant;
+				aux->prox=aux->ant;
+				aux->ant->ant=aux;
+				if(aux2!=NULL)
+					aux2->prox=aux;
+				aux->ant=aux2;
+			}
+			if(aux->prox==ptlista)
+				ptlista=aux;
+		}
+	}
+	return ptlista;
+}
+
+Tranking_circulo* Exclui_ranking_circulo (Tranking_circulo *ptlista)
+{
+	if(ptlista!=NULL)
+	{
+		while(ptlista->prox!=NULL)
+		{
+			ptlista=ptlista->prox;
+			free(ptlista->ant);
+			ptlista->ant=NULL;
+		}
+		free(ptlista);
+		ptlista=NULL;
+	}
+	return ptlista;
+}
+

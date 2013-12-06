@@ -1,6 +1,7 @@
 typedef struct feed Tfeed;
 typedef struct usuario Tusuario;
 typedef struct amigo_inimigo Tamigo_inimigo;
+typedef struct ranking_circulo Tranking_circulo;
 typedef struct ranking_popular Tranking_popular;
 
 struct feed{
@@ -23,6 +24,13 @@ struct amigo_inimigo{
 	Tusuario *info;
 	int FB;
 	Tamigo_inimigo *esq, *dir;
+};
+
+struct ranking_circulo{
+	char nome[100];
+	int num;
+	Tranking_circulo *ant;
+	Tranking_circulo *prox;
 };
 
 struct ranking_popular{
