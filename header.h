@@ -85,3 +85,12 @@ void Imprime_feed_todos_amigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida
 void Imprime_feed_todos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida);
 void Imprime_feed_todos_amigos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FILE* saida);
 
+Tranking_circulo* Insere_ranking_circulo(Tranking_circulo *ptlista, char nome[]);
+Tranking_circulo* Exclui_ranking_circulo(Tranking_circulo *ptlista);
+void Percorre_amigos_circular(Tamigo_inimigo* t, Tranking_circulo** ptlista);
+void Percorre_amigos_amigos_circular(Tamigo_inimigo *t, Tranking_circulo** ptlista);
+void Percorre_rivais_circular(Tamigo_inimigo* t, Tranking_circulo** ptlista);
+void Percorre_rivais_rivais_circular(Tamigo_inimigo *t, Tranking_circulo** ptlista);
+void Imprime_todos_ranking_circulo(Tranking_circulo *ptlista, FILE *saida);
+void Imprime_ranking_circulo(Tranking_circulo *ptlista, int top, FILE *saida);
+

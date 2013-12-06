@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
+#include "abp.h"
 
 //função responsavel por alocar e armazenar os dados do novo usuario
 Tusuario* Novo(char nome[], Tusuario* esq, Tusuario* dir)
@@ -866,67 +866,126 @@ void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou,
 
 Tranking_circulo* Insere_ranking_circulo (Tranking_circulo *ptlista, char nome[])
 {
-	Tranking_circulo *novo, *aux, *aux2=NULL;
-	if(ptlista==NULL)
-	{
-		ptlista=malloc(sizeof(Tranking_circulo));
-		strcpy(ptlista->nome,nome);
-		ptlista->num=1;
-		ptlista->ant=NULL;
-		ptlista->prox=NULL;
-	}
-	else
-	{
-		aux=ptlista;
-		while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
-		{	
-			aux2=aux;
-			aux=aux->prox;
-		}
-		if(aux==NULL)
-		{
-			novo=malloc(sizeof(Tranking_circulo));
-			strcpy(novo->nome,nome);
-			novo->num=1;
-			novo->ant=aux2;
-			aux2->prox=novo;
-			novo->prox=NULL;
-		}
-		else
-		{
-			aux->num+=1;
-			while((aux->ant!=NULL)&&(aux->ant->num<aux->num))
-			{
-				aux2=aux->ant->ant;
-				aux->ant->prox=aux->prox;
-				if(aux->prox!=NULL)
-					aux->prox->ant=aux->ant;
-				aux->prox=aux->ant;
-				aux->ant->ant=aux;
-				if(aux2!=NULL)
-					aux2->prox=aux;
-				aux->ant=aux2;
-			}
-			if(aux->prox==ptlista)
-				ptlista=aux;
-		}
-	}
-	return ptlista;
+    Tranking_circulo *novo, *aux, *aux2=NULL;
+    if(ptlista==NULL)
+    {
+        ptlista=malloc(sizeof(Tranking_circulo));
+        strcpy(ptlista->nome,nome);
+        ptlista->num=1;
+        ptlista->ant=NULL;
+        ptlista->prox=NULL;
+    }
+    else
+    {
+        aux=ptlista;
+        while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
+        {
+            aux2=aux;
+            aux=aux->prox;
+        }
+        if(aux==NULL)
+        {
+            novo=malloc(sizeof(Tranking_circulo));
+            strcpy(novo->nome,nome);
+            novo->num=1;
+            novo->ant=aux2;
+            aux2->prox=novo;
+            novo->prox=NULL;
+        }
+        else
+        {
+            aux->num+=1;
+            while((aux->ant!=NULL)&&(aux->ant->num<aux->num))
+            {
+                aux2=aux->ant->ant;
+                aux->ant->prox=aux->prox;
+                if(aux->prox!=NULL)
+                    aux->prox->ant=aux->ant;
+                aux->prox=aux->ant;
+                aux->ant->ant=aux;
+                if(aux2!=NULL)
+                    aux2->prox=aux;
+                aux->ant=aux2;
+            }
+            if(aux->prox==ptlista)
+                ptlista=aux;
+        }
+    }
+    return ptlista;
 }
 
 Tranking_circulo* Exclui_ranking_circulo (Tranking_circulo *ptlista)
 {
-	if(ptlista!=NULL)
-	{
-		while(ptlista->prox!=NULL)
-		{
-			ptlista=ptlista->prox;
-			free(ptlista->ant);
-			ptlista->ant=NULL;
-		}
-		free(ptlista);
-		ptlista=NULL;
-	}
-	return ptlista;
+    if(ptlista!=NULL)
+    {
+        while(ptlista->prox!=NULL)
+        {
+            ptlista=ptlista->prox;
+            free(ptlista->ant);
+            ptlista->ant=NULL;
+        }
+        free(ptlista);
+        ptlista=NULL;
+    }
+    return ptlista;
+}
+
+void Percorre_amigos_circular(Tamigo_inimigo* t, Tranking_circulo** ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_amigos_circular(t->esq, *ptlista); //chama a mesma função para arvore a esquerda
+        Percorre_amigos_amigos_circular(t->info->ptamigos, *ptlista);
+        Percorre_amigos_circular(t->dir, *ptlista); //chama a mesma função para arvore a direita
+    }
+}
+
+void Percorre_amigos_amigos_circular(Tamigo_inimigo *t, Tranking_circulo** ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_amigos_amigos_circular(t->esq, *ptlista); //chama a mesma função para arvore a esquerda
+        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome);
+        Percorre_amigos_amigos_circular(t->dir, *ptlista); //chama a mesma função para arvore a direita
+    }
+}
+
+void Percorre_rivais_circular(Tamigo_inimigo* t, Tranking_circulo** ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_rivais_circular(t->esq, *ptlista); //chama a mesma função para arvore a esquerda
+        Percorre_rivais_rivais_circular(t->info->ptamigos, *ptlista);
+        Percorre_rivais_circular(t->dir, *ptlista); //chama a mesma função para arvore a direita
+    }
+}
+
+void Percorre_rivais_rivais_circular(Tamigo_inimigo *t, Tranking_circulo** ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_rivais_rivais_circular(t->esq, (*ptlista)); //chama a mesma função para arvore a esquerda
+        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome);
+        Percorre_rivais_rivais_circular(t->dir, (*ptlista)); //chama a mesma função para arvore a direita
+    }
+}
+
+void Imprime_todos_ranking_circulo (Tranking_circulo *ptlista, FILE *saida)
+{
+    while(ptlista!=NULL)
+    {
+        fprintf(saida," %s", ptlista->nome);
+        ptlista=ptlista->prox;
+    }
+}
+
+void Imprime_ranking_circulo (Tranking_circulo *ptlista, int top, FILE *saida)
+{
+    while((ptlista!=NULL) && (top!=0))
+    {
+        fprintf(saida," %s", ptlista->nome);
+        ptlista=ptlista->prox;
+        top--;
+    }
 }
 
