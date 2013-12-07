@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "abp.h"
+#include <string.h>
+#include "header.h"
 
-int main(int argc, char *argv[])
+int main()
 {
     Tusuario *ptusuario=NULL, *amigoinimigo;
     FILE *entrada, *saida;
@@ -16,7 +17,7 @@ int main(int argc, char *argv[])
     /*printf("Digite o nome do arquivo de entrada:\n");
     gets(nome_arq);*/
 
-    if(entrada=fopen(nome_arq,"r"))
+if(entrada=fopen(nome_arq,"r"))
     {
         printf("Arquivo aberto com sucesso\n");
         saida=fopen("saida.txt","w");
@@ -106,7 +107,7 @@ int main(int argc, char *argv[])
                         }
                         else
                         {
-                            fprintf(saida,"m ERRO usuario nao cadastrado\n", nome1);
+                            fprintf(saida,"m ERRO usuario nao cadastrado\n");
                         }
                     }
                     break;
@@ -210,7 +211,7 @@ int main(int argc, char *argv[])
                                 if(ptusuario->ptamigos != NULL)
                                 {
                                     Percorre_amigos_amigos_circular(ptusuario->ptamigos, &ptlista);
-                                    Percorre_amigos_circular(ptusuario, &ptlista);
+                                    Percorre_amigos_circular(ptusuario->ptamigos, &ptlista);
                                 }
                                 else
                                 {
@@ -224,7 +225,7 @@ int main(int argc, char *argv[])
                                     if(ptusuario->ptinimigos != NULL)
                                     {
                                         Percorre_rivais_rivais_circular(ptusuario->ptinimigos, &ptlista);
-                                        Percorre_rivais_circular(ptusuario, &ptlista);
+                                        Percorre_rivais_circular(ptusuario->ptinimigos, &ptlista);
                                     }
                                     else
                                     {
@@ -238,8 +239,8 @@ int main(int argc, char *argv[])
                                     {
                                         Percorre_rivais_rivais_circular(ptusuario->ptinimigos, &ptlista);
                                         Percorre_amigos_amigos_circular(ptusuario->ptamigos, &ptlista);
-                                        Percorre_rivais_circular(ptusuario, &ptlista);
-                                        Percorre_amigos_circular(ptusuario, &ptlista);
+                                        Percorre_rivais_circular(ptusuario->ptamigos, &ptlista);
+                                        Percorre_amigos_circular(ptusuario->ptinimigos, &ptlista);
                                     }
                                     else
                                     {
