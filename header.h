@@ -87,6 +87,7 @@ void Imprime_feed_todos_amigos_inimigos(Tfeed* topo, Tusuario *t, int *achou, FI
 
 Tranking_circulo* Insere_ranking_circulo(Tranking_circulo *ptlista, char nome[]);
 Tranking_circulo* Exclui_ranking_circulo(Tranking_circulo *ptlista);
+void Percorre_amigos_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista);
 void Percorre_amigos_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista);
 void Percorre_amigos_amigos_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista);
 void Percorre_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista);

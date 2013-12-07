@@ -239,8 +239,9 @@ if(entrada=fopen(nome_arq,"r"))
                                     {
                                         Percorre_rivais_rivais_circular(ptusuario->ptinimigos, &ptlista);
                                         Percorre_amigos_amigos_circular(ptusuario->ptamigos, &ptlista);
-                                        Percorre_rivais_circular(ptusuario->ptamigos, &ptlista);
-                                        Percorre_amigos_circular(ptusuario->ptinimigos, &ptlista);
+                                        Percorre_amigos_rivais_circular(ptusuario->ptamigos, &ptlista);
+                                        Percorre_amigos_rivais_circular(ptusuario->ptinimigos, &ptlista);
+
                                     }
                                     else
                                     {

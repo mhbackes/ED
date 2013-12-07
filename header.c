@@ -956,8 +956,19 @@ void Percorre_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
     if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
     {
         Percorre_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        Percorre_rivais_rivais_circular(t->info->ptamigos, ptlista);
+        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista);
         Percorre_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
+    }
+}
+
+void Percorre_amigos_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_amigos_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
+        Percorre_amigos_amigos_circular(t->info->ptamigos, ptlista);
+        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista);
+        Percorre_amigos_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
     }
 }
 
