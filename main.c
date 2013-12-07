@@ -262,7 +262,7 @@ if(entrada=fopen(nome_arq,"r"))
                         }
                         else
                         {
-                            fprintf(saida, "p ERRO usuario nao cadastrado\n");
+                            fprintf(saida, "c ERRO usuario nao cadastrado\n");
                         }
                     }
                     ptlista = Exclui_ranking_circulo(ptlista);

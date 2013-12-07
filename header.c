@@ -832,8 +832,9 @@ void Imprime_feed_amigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* sa
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
+            top--;
         }
-        Imprime_feed_amigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
@@ -845,8 +846,9 @@ void Imprime_feed_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* 
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
+            top--;
         }
-        Imprime_feed_amigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
@@ -860,59 +862,60 @@ void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou,
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
+            top--;
         }
-        Imprime_feed_amigos_inimigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos_inimigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
 Tranking_circulo* Insere_ranking_circulo (Tranking_circulo *ptlista, char nome[])
 {
-    Tranking_circulo *novo, *aux, *aux2=NULL;
-    if(ptlista==NULL)
-    {
-        ptlista=malloc(sizeof(Tranking_circulo));
-        strcpy(ptlista->nome,nome);
-        ptlista->num=1;
-        ptlista->ant=NULL;
-        ptlista->prox=NULL;
+	Tranking_circulo *aux, *aux2=NULL;
+	if(ptlista==NULL)
+	{
+		ptlista=malloc(sizeof(Tranking_circulo));
+		strcpy(ptlista->nome,nome);
+		ptlista->num=1;
+		ptlista->ant=NULL;
+		ptlista->prox=NULL;
+	}
+	else
+	{
+		aux=ptlista;
+		while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
+		{
+			aux2=aux;
+			aux=aux->prox;
+		}
+		if(aux==NULL)
+		{
+			aux=malloc(sizeof(Tranking_circulo));
+			strcpy(aux->nome,nome);
+			aux->num=1;
+			aux->ant=aux2;
+			aux2->prox=aux;
+            aux->prox=NULL;
+		}
+		else
+			aux->num+=1;
+
+        while((aux->ant!=NULL)&&
+              ((aux->ant->num<aux->num)||((aux->ant->num==aux->num)&&(strcmp(aux->ant->nome,aux->nome)>0))))
+        {
+            aux2=aux->ant->ant;
+            aux->ant->prox=aux->prox;
+            if(aux->prox!=NULL)
+                aux->prox->ant=aux->ant;
+            aux->prox=aux->ant;
+            aux->ant->ant=aux;
+            if(aux2!=NULL)
+                aux2->prox=aux;
+            aux->ant=aux2;
+        }
+        if(aux->prox==ptlista)
+            ptlista=aux;
     }
-    else
-    {
-        aux=ptlista;
-        while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
-        {
-            aux2=aux;
-            aux=aux->prox;
-        }
-        if(aux==NULL)
-        {
-            novo=malloc(sizeof(Tranking_circulo));
-            strcpy(novo->nome,nome);
-            novo->num=1;
-            novo->ant=aux2;
-            aux2->prox=novo;
-            novo->prox=NULL;
-        }
-        else
-        {
-            aux->num+=1;
-            while((aux->ant!=NULL)&&(aux->ant->num<aux->num))
-            {
-                aux2=aux->ant->ant;
-                aux->ant->prox=aux->prox;
-                if(aux->prox!=NULL)
-                    aux->prox->ant=aux->ant;
-                aux->prox=aux->ant;
-                aux->ant->ant=aux;
-                if(aux2!=NULL)
-                    aux2->prox=aux;
-                aux->ant=aux2;
-            }
-            if(aux->prox==ptlista)
-                ptlista=aux;
-        }
-    }
-    return ptlista;
+	return ptlista;
 }
 
 Tranking_circulo* Exclui_ranking_circulo (Tranking_circulo *ptlista)
