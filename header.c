@@ -1,3 +1,6 @@
+//Claudio Rodrigo Gisch   Nº228366
+//Marcos Henrique Backes  Nº228483
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,87 +28,87 @@ Tusuario* Insere_Usuario(Tusuario *t, char nome[], FILE *saida)
     return retorno;
 };
 
-//função responsável por
+//função responsável por organizar a arvore de usuários
 Tusuario* Splay(Tusuario* t, char nome[], FILE *saida)
 {
     Tusuario *retorno;
-    if (t == NULL)
+    if (t == NULL) //arvore vazia
     {
-        retorno=Novo(nome,NULL,NULL);
-        fprintf(saida,"i usuario inserido com sucesso\n");
+        retorno=Novo(nome,NULL,NULL); //insere o novo usuário
+        fprintf(saida,"i usuario inserido com sucesso\n"); //imprime o resultado no arquivo texto
     }
-    else
+    else //não vazia
     {
-        if (!strcmp(nome,t->nome))
+        if (!strcmp(nome,t->nome)) //verifica se o usuario esta cadastrado
         {
-            fprintf(saida,"i ERRO: Usuario ja cadastrado\n");
-            retorno=t;
+            fprintf(saida,"i ERRO: Usuario ja cadastrado\n"); //imprime uma mensagem de erro no arquivo texto
+            retorno=t; //retorna o ponteiro da arvore de usuarios
         }
         else
         {
-            if (strcmp(nome,t->nome)<0)
+            if (strcmp(nome,t->nome)<0) //procura o local para a inserção do novo usuario
             {
-                if (t->esq == NULL)
+                if (t->esq == NULL) //nodo a esquerda está disponível
                 {
-                    retorno=Novo(nome,NULL,t);
-                    fprintf(saida,"i usuario inserido com sucesso\n");
+                    retorno=Novo(nome,NULL,t); //insere o novo usuario
+                    fprintf(saida,"i usuario inserido com sucesso\n"); //imprime o resultado no arquivo texto
                 }
                 else
                 {
-                    if (!strcmp(nome,t->esq->nome))
+                    if (!strcmp(nome,t->esq->nome))//verifica se o usuario esta cadastrado
                     {
-                        fprintf(saida,"i ERRO: Usuario ja cadastrado\n");
-                        retorno=RotDir(t);
+                        fprintf(saida,"i ERRO: Usuario ja cadastrado\n"); //imprime uma mensagem de erro no arquivo texto
+                        retorno=RotDir(t); //faz rotação a direita
                     }
                     else
                     {
-                        if (strcmp(nome,t->esq->nome)<0)
+                        if (strcmp(nome,t->esq->nome)<0) //procura o local para a inserção do novo usuario
                         {
-                            t->esq->esq = Splay(t->esq->esq, nome,saida);
-                            t = RotDir(t);
+                            t->esq->esq = Splay(t->esq->esq, nome,saida); //chama a mesma função
+                            t = RotDir(t); //faz rotação a direita
                         }
                         else
                         {
-                            t->esq->dir = Splay(t->esq->dir, nome,saida);
-                            t->esq = RotEsq(t->esq);
+                            t->esq->dir = Splay(t->esq->dir, nome,saida); //chama a mesma função
+                            t->esq = RotEsq(t->esq); //faz rotação a esquerda
                         }
-                        retorno=RotDir(t);
+                        retorno=RotDir(t); //faz rotação a direita
                     }
                 }
             }
             else
             {
-                if (t->dir == NULL)
+                if (t->dir == NULL) //nodo da direita está disponivel
                 {
-                    retorno=Novo(nome,t,NULL);
-                    fprintf(saida,"i usuario inserido com sucesso\n");
+                    retorno=Novo(nome,t,NULL);  //insere o novo usuario
+                    fprintf(saida,"i usuario inserido com sucesso\n"); //imprime o resultado no arquivo texto
                 }
                 else
                 {
-                    if (!strcmp(nome,t->dir->nome))
+                    if (!strcmp(nome,t->dir->nome)) //verifica se o usuario esta cadastrado
                     {
-                        fprintf(saida,"i ERRO: Usuario ja cadastrado\n");
-                        retorno=RotEsq(t);
+                        fprintf(saida,"i ERRO: Usuario ja cadastrado\n"); //imprime uma mensagem de erro no arquivo texto
+                        retorno=RotEsq(t); //faz rotação a esquerda
                     }
                     else
                     {
-                        if (strcmp(nome,t->dir->nome)>0)
+                        if (strcmp(nome,t->dir->nome)>0) //procura o local para a inserção do novo usuario
                         {
-                            t->dir->dir = Splay(t->dir->dir, nome,saida);
-                            t = RotEsq(t);
+                            t->dir->dir = Splay(t->dir->dir, nome,saida); //chama a mesma função
+                            t = RotEsq(t); //faz rotação a esquerda
                         }
                         else
                         {
-                            t->dir->esq = Splay(t->dir->esq, nome,saida);
-                            t->dir = RotDir(t->dir);
+                            t->dir->esq = Splay(t->dir->esq, nome,saida); //chama a mesma função
+                            t->dir = RotDir(t->dir); //faz rotação a direita
                         }
-                        retorno=RotEsq(t);
+                        retorno=RotEsq(t); //faz rotação as esquerda
                     }
                 }
             }
         }
     }
-    return retorno;
+    return retorno; //retorna o ponteiro retorno
 };
 
 //faz rotação para direita
@@ -184,105 +187,55 @@ Tusuario* Consulta_Usuario(Tusuario* t, char nome[])
     Tusuario* retorno;
     if (t==NULL) //se o ponteiro for NULL, retorna NULL (lista de usuários vazia)
         retorno=NULL;
-    else if (strcmp(nome, t->nome)<0)
+    else if (strcmp(nome, t->nome)<0) //compara nome do nodo atual com o nome a ser procurado
     {
         if (t->esq == NULL)
             retorno=t;
-        else if (strcmp(nome, t->esq->nome)<0)
+        else if (strcmp(nome, t->esq->nome)<0) //compara nome do nodo atual com o nome a ser procurado
         {
-            t->esq->esq = Consulta_Usuario(t->esq->esq, nome);
-            t = RotDir(t);
+            t->esq->esq = Consulta_Usuario(t->esq->esq, nome); // chama a mesma função
+            t = RotDir(t); //rotação a direita
             if (t->esq == NULL)
                 retorno=t;
             else
-                retorno=RotDir(t);
+                retorno=RotDir(t); //rotação a direita
         }
-        else if (strcmp(t->esq->nome,nome)<0)
+        else if (strcmp(t->esq->nome,nome)<0) //compara nome do nodo atual com o nome a ser procurado
         {
-            t->esq->dir = Consulta_Usuario(t->esq->dir, nome);
+            t->esq->dir = Consulta_Usuario(t->esq->dir, nome); //chama a mesma função
             if (t->esq->dir != NULL)
-                t->esq = RotEsq(t->esq);
-            retorno=RotDir(t);
+                t->esq = RotEsq(t->esq); //rotação a esquerda
+            retorno=RotDir(t); //rotação a direita
         }
         else
-            retorno=RotDir(t);
+            retorno=RotDir(t); //rotação a direita
     }
-    else if(strcmp(t->nome, nome)<0)
+    else if(strcmp(t->nome, nome)<0) //compara nome do nodo atual com o nome a ser procurado
     {
         if (t->dir == NULL)
             retorno=t;
-        else if (strcmp(t->dir->nome,nome)<0)
+        else if (strcmp(t->dir->nome,nome)<0) //compara nome do nodo atual com o nome a ser procurado
         {
-            t->dir->dir = Consulta_Usuario(t->dir->dir, nome);
-            t = RotEsq(t);
+            t->dir->dir = Consulta_Usuario(t->dir->dir, nome); // chama a mesma fução
+            t = RotEsq(t); //rotação a esquerda
             if (t->dir == NULL)
                 retorno=t;
             else
-                retorno=RotEsq(t);
+                retorno=RotEsq(t); //rotação a esquerda
         }
-        else if (strcmp(nome,t->dir->nome)<0)
+        else if (strcmp(nome,t->dir->nome)<0) //compara nome do nodo atual com o nome a ser procurado
         {
-            t->dir->esq = Consulta_Usuario(t->dir->esq, nome);
-            if (t->dir->esq != NULL) t->dir = RotDir(t->dir);
-            retorno=RotEsq(t);
+            t->dir->esq = Consulta_Usuario(t->dir->esq, nome); //chama a mesma função
+            if (t->dir->esq != NULL) t->dir = RotDir(t->dir); //rotação a direita
+            retorno=RotEsq(t); //rotação a esquerda
         }
         else
-            retorno=RotEsq(t);
+            retorno=RotEsq(t); //rotação a esquerda
     }
     else
         retorno=t;
-    return retorno;
+    return retorno; //retorna o ponteiro retorno
 };
-
-void Desenha(Tusuario* t, int nivel, int num)
-{
-    int x;
-    if (t !=NULL)
-    {
-        for (x=1; x<=nivel; x++)
-            printf("=");
-        printf("%s", t->nome);
-        if (num==0)
-            printf(" Raiz\n");
-        else if(num==1)
-            printf(" Esq\n");
-        else
-            printf(" Dir\n");
-        if (t->esq != NULL) Desenha(t->esq, (nivel+1), 1);
-        if (t->dir != NULL) Desenha(t->dir, (nivel+1), 2);
-    }
-    else printf("Arvore Vazia");
-}
-void central_esquerda (Tusuario *a, char array[][80], int *i, int nivel)
-{
-    if(a!=NULL)
-    {
-        central_esquerda(a->esq,array,i,nivel+1);
-        array[nivel][*i]=a->nome[0];
-        array[nivel][*i+1]=a->nome[1];
-        *i=*i+2;
-        central_esquerda(a->dir,array,i,nivel+1);
-    }
-}
-
-void imprime_arvore (Tusuario *a)
-{
-    char array[24][80]= {0};
-    int i=0,j;
-    central_esquerda (a,array,&i,0);
-    for(i=0; i<24; i++)
-    {
-        for(j=0; j<80; j++)
-        {
-            if(array[i][j]!=0)
-                printf("%c", array[i][j]);
-            else
-                printf(" ");
-        }
-        if(j%2)
-            printf(" ");
-    }
-}
 
 //função responsável pela impressão dos amigos ou rivais de um dado usuário t
 void Exibe_Amigos(Tusuario* t, int tipo, int top, FILE *saida)
@@ -613,11 +566,13 @@ Tamigo_inimigo* Caso2 (Tamigo_inimigo *a , int *ok)
     return a;
 }
 
+//adiciona um novo amigo a lista de amigos
 Tamigo_inimigo* Insere_amigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida)
 {
     int comp;
-    if (a == NULL)
+    if (a == NULL) //se for NULL, insere o novo amigo
     {
+        //atualização dos dados do amigo
         a = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
         a->info = x;
         a->esq = NULL;
@@ -629,6 +584,7 @@ Tamigo_inimigo* Insere_amigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *sai
     }
     else
     {
+        //verifica se o amigo já foi inserido
         comp=strcmp(a->info->nome, x->nome);
         if (comp==0)
         {
@@ -679,26 +635,29 @@ Tamigo_inimigo* Insere_amigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *sai
     return a;
 }
 
+//adiciona um novo rival a lista de inimigos
 Tamigo_inimigo* Insere_inimigo (Tamigo_inimigo *a, Tusuario *x, int *ok, FILE *saida)
 {
     int comp;
-    if (a == NULL)
+    if (a == NULL) //se for NULL, insere o novo rival
     {
+        //atualização dos dados do amigo
         a = (Tamigo_inimigo*) malloc(sizeof(Tamigo_inimigo));
         a->info = x;
         a->esq = NULL;
         a->dir = NULL;
         a->FB = 0;
         *ok = 1;
-        fprintf(saida,"a inimigo inserido com sucesso\n");
+        fprintf(saida,"a rival inserido com sucesso\n");
         x->numinimigos+=1;
     }
     else
     {
+        //verifica se o amigo já foi inserido
         comp=strcmp(a->info->nome, x->nome);
         if (comp==0)
         {
-            fprintf(saida,"a ERRO inimigo ja inserido\n");
+            fprintf(saida,"a ERRO rival ja inserido\n");
             return a;
         }
         else if (comp>0)
@@ -832,9 +791,8 @@ void Imprime_feed_amigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* sa
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
-            top--;
         }
-        Imprime_feed_amigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
@@ -846,9 +804,8 @@ void Imprime_feed_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou, FILE* 
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
-            top--;
         }
-        Imprime_feed_amigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
@@ -862,62 +819,66 @@ void Imprime_feed_amigos_inimigos(Tfeed* topo, Tusuario *t, int top, int *achou,
         {
             fprintf(saida,"\n\"%s\" %s", topo->texto, topo->nome); //imprime o post e o nome do usuario q o criou
             *achou=1; //flag para indicar que ao menos um post foi encotrado
-            top--;
         }
-        Imprime_feed_amigos_inimigos(topo->prox, t, top, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
+        Imprime_feed_amigos_inimigos(topo->prox, t, top-1, achou, saida); //chama a função para o próximo post da pilha, decrementado o contador
     }
 }
 
+//função responsável por atualizar a lista de ranking circular
 Tranking_circulo* Insere_ranking_circulo (Tranking_circulo *ptlista, char nome[])
 {
-	Tranking_circulo *aux, *aux2=NULL;
-	if(ptlista==NULL)
-	{
-		ptlista=malloc(sizeof(Tranking_circulo));
-		strcpy(ptlista->nome,nome);
-		ptlista->num=1;
-		ptlista->ant=NULL;
-		ptlista->prox=NULL;
-	}
-	else
-	{
-		aux=ptlista;
-		while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0))
-		{
-			aux2=aux;
-			aux=aux->prox;
-		}
-		if(aux==NULL)
-		{
-			aux=malloc(sizeof(Tranking_circulo));
-			strcpy(aux->nome,nome);
-			aux->num=1;
-			aux->ant=aux2;
-			aux2->prox=aux;
-            aux->prox=NULL;
-		}
-		else
-			aux->num+=1;
-
-        while((aux->ant!=NULL)&&
-              ((aux->ant->num<aux->num)||((aux->ant->num==aux->num)&&(strcmp(aux->ant->nome,aux->nome)>0))))
-        {
-            aux2=aux->ant->ant;
-            aux->ant->prox=aux->prox;
-            if(aux->prox!=NULL)
-                aux->prox->ant=aux->ant;
-            aux->prox=aux->ant;
-            aux->ant->ant=aux;
-            if(aux2!=NULL)
-                aux2->prox=aux;
-            aux->ant=aux2;
-        }
-        if(aux->prox==ptlista)
-            ptlista=aux;
+    Tranking_circulo *novo, *aux, *aux2=NULL; //variaveis
+    if(ptlista==NULL) //se a lista for NULL, insere novo usuario
+    {
+        //inicializa os dados do usuario
+        ptlista=malloc(sizeof(Tranking_circulo));
+        strcpy(ptlista->nome,nome);
+        ptlista->num=1;
+        ptlista->ant=NULL;
+        ptlista->prox=NULL;
     }
-	return ptlista;
+    else
+    //verifica se o usuario já está na lista
+    {
+        aux=ptlista;
+        while((aux!=NULL)&&((strcmp(aux->nome,nome))!=0)) //executa o laço até encontrar um espaço vazio ou até achar o usuario na lista
+        {
+            aux2=aux;
+            aux=aux->prox;
+        }
+        if(aux==NULL) //se aux for NULL, o usuario não está na lista, portanto é inserido nela
+        {
+            novo=malloc(sizeof(Tranking_circulo));
+            strcpy(novo->nome,nome);
+            novo->num=1;
+            novo->ant=aux2;
+            aux2->prox=novo;
+            novo->prox=NULL;
+        }
+        else //se nao for NULL, o usuario está na lista e se incrementa o numero de vezes que ele aparece
+        {
+            aux->num+=1;
+            //verifica se ele, com essa atualização, o usuario ficou mais popular que outro da lista
+            while((aux->ant!=NULL)&&(aux->ant->num<aux->num))
+            {
+                aux2=aux->ant->ant;
+                aux->ant->prox=aux->prox;
+                if(aux->prox!=NULL)
+                    aux->prox->ant=aux->ant;
+                aux->prox=aux->ant;
+                aux->ant->ant=aux;
+                if(aux2!=NULL)
+                    aux2->prox=aux;
+                aux->ant=aux2;
+            }
+            if(aux->prox==ptlista)
+                ptlista=aux;
+        }
+    }
+    return ptlista;
 }
 
+//função para liberar o espaço, alocado para a função circulo, depois de sua execução
 Tranking_circulo* Exclui_ranking_circulo (Tranking_circulo *ptlista)
 {
     if(ptlista!=NULL)
@@ -934,57 +895,63 @@ Tranking_circulo* Exclui_ranking_circulo (Tranking_circulo *ptlista)
     return ptlista;
 }
 
+//responsável por chamar para cada amigo do usuario t, uma função recursiva
 void Percorre_amigos_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
 {
     if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
     {
         Percorre_amigos_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        Percorre_amigos_amigos_circular(t->info->ptamigos, ptlista);
+        Percorre_amigos_amigos_circular(t->info->ptamigos, ptlista); //chama a função recursiva
         Percorre_amigos_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
     }
 }
 
+//responsável por percorrer uma lista de amigos e chamar a função de atualzação da lista popular para cada um dos amigos
 void Percorre_amigos_amigos_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
 {
     if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
     {
         Percorre_amigos_amigos_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome);
+        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome); //chama a função insere para atualizar a lista
         Percorre_amigos_amigos_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
     }
 }
 
+//responsável por chamar para cada rival do usuario t, uma função recursiva
 void Percorre_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
 {
     if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
     {
         Percorre_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista);
+        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista); //chama a função recursiva
         Percorre_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
     }
 }
 
-void Percorre_amigos_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
-{
-    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
-    {
-        Percorre_amigos_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        Percorre_amigos_amigos_circular(t->info->ptamigos, ptlista);
-        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista);
-        Percorre_amigos_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
-    }
-}
-
+//responsável por percorrer uma lista de rivais e chamar a função de atualzação da lista popular para cada um dos rivais
 void Percorre_rivais_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
 {
     if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
     {
         Percorre_rivais_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
-        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome);
+        (*ptlista) = Insere_ranking_circulo ((*ptlista), t->info->nome); //chama a função insere para atualizar a lista
         Percorre_rivais_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
     }
 }
 
+//responsável por chamar para cada amigo e rival do usuario t, uma função recursiva
+void Percorre_amigos_rivais_circular(Tamigo_inimigo *t, Tranking_circulo **ptlista)
+{
+    if(t!=NULL) //apenas executa se o ponteiro para usuário não for NULL
+    {
+        Percorre_amigos_rivais_circular(t->esq, ptlista); //chama a mesma função para arvore a esquerda
+        Percorre_amigos_amigos_circular(t->info->ptamigos, ptlista); //chama a função recursiva para os amigos
+        Percorre_rivais_rivais_circular(t->info->ptinimigos, ptlista); //chama a função recursiva para os rivais
+        Percorre_amigos_rivais_circular(t->dir, ptlista); //chama a mesma função para arvore a direita
+    }
+}
+
+//função que imprime todos os usuarios da lista popular por ordem de popularidade
 void Imprime_todos_ranking_circulo (Tranking_circulo *ptlista, FILE *saida)
 {
     while(ptlista!=NULL)
@@ -994,6 +961,7 @@ void Imprime_todos_ranking_circulo (Tranking_circulo *ptlista, FILE *saida)
     }
 }
 
+//função que imprime um número X (definido pelo parametro top) de usuarios da lista popular por ordem de popularidade
 void Imprime_ranking_circulo (Tranking_circulo *ptlista, int top, FILE *saida)
 {
     while((ptlista!=NULL) && (top!=0))
