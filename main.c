@@ -15,11 +15,11 @@ int main()
     Tranking_circulo* ptlista = NULL;
     Tranking_popular* ptranking = NULL;
     int ok=0;
-    char opcao, nome1[100], nome2[100], texto[81], nome_arq[100]= {"texto.txt"};
+    char opcao, nome1[100], nome2[100], texto[81], nome_arq[100];
     int ord, top, tipo, achou=0;
 
-    /*printf("Digite o nome do arquivo de entrada:\n");
-    gets(nome_arq);*/
+    printf("Digite o nome do arquivo de entrada:\n");
+    gets(nome_arq);
 
     //abertura do arquvio
     if(entrada=fopen(nome_arq,"r"))
@@ -85,12 +85,12 @@ int main()
                             {
                                 if(!(strcmp(nome1,(ptusuario)->nome))) //verifica se nome1 está na lista de usuarios
                                 {
-                                    if(tipo == 1) //insere na lista de amigos
+                                    if(tipo == 1) //insere na arvore de amigos
                                     {
                                         ptusuario->ptamigos=Insere_amigo(ptusuario->ptamigos, amigoinimigo, &ok, saida);
 
                                     }
-                                    else //insere na lista de rivais
+                                    else //insere na arvore de rivais
                                     {
                                         ptusuario->ptinimigos=Insere_inimigo(ptusuario->ptinimigos, amigoinimigo, &ok, saida);
                                     }
@@ -164,7 +164,7 @@ int main()
                     }
                     break;
 
-                //p = imprime os post de um dado usuario
+                //p = imprime os posts de um dado usuario
                 case 'p':
                     printf("Exibe Painel\n");
                     fscanf(entrada, "%s%d%d", nome1, &tipo, &top); //busca dos dados no arquivo texto
@@ -319,7 +319,7 @@ int main()
                     }
                 }
                 getc(entrada); //pega próxima operação
-                fflush(saida); //limpa o buffer
+                fflush(saida); //salva modificaçoes do arquivo de saida
             }
         }
         fclose(entrada); //fecha o arquivo texto
